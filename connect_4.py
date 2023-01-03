@@ -32,6 +32,10 @@ class Connect4:
         show a representation of the board
         :return: representation of the board
         """
+        # clear screen before printing the board
+        os.system('cls' if os.name == 'nt' else 'clear')
+
+        # create a string representation of the board
         board = ""
         for j in range(self.height):
             board += "---".join(["+"] * (self.width + 1)) + "\n"
@@ -40,6 +44,8 @@ class Connect4:
                 + "|\n"
             )
         board += "---".join(["+"] * (self.width + 1))
+
+        # return this string
         return board
 
     @classmethod
@@ -53,10 +59,20 @@ class Connect4:
 
     @classmethod
     def available_actions(cls, board):
+        """
+        return the set of allowed actions for a given board
+        :param board: representation of the board state
+        :return: set of available actions
+        """
+        # initialise set
         actions = set()
+        
+        # add any column with a blank space
         for i, column in enumerate(board):
             if column[-1] == " ":
                 actions.add(i)
+        
+        # return completed set
         return actions
 
     def change_player(self):
@@ -67,16 +83,24 @@ class Connect4:
         self.player = Connect4.other_player(self.player)
 
     def make_move(self, action):
+        """
+        update the board with an action (according to connect-4 mechanics)
+        :param action: column index for piece to be "placed in"
+        :return:  None
+        """
+        # check for errors
         if action not in Connect4.available_actions(self.board):
             raise ValueError("invalid move")
         if self.winner is not None:
             raise ValueError("game already won")
 
+        # put tile in first blank spot
         for i, tile in enumerate(self.board[action]):
             if tile == " ":
                 self.board[action][i] = self.player
                 break
-
+                
+        # update player
         self.change_player()
 
     def check_winner(self):
@@ -307,9 +331,6 @@ def play(agent, width, height, connect, human_start=True):
 
     # set up gameplay loop
     while True:
-
-        # clear screen/terminal before printing
-        os.system('cls' if os.name == 'nt' else 'clear')
         
         # print out the board
         print(game)
@@ -347,17 +368,14 @@ def play(agent, width, height, connect, human_start=True):
         game.make_move(action)
         game.check_winner()
         if game.winner == human_player:
-            os.system('cls' if os.name == 'nt' else 'clear')
             print(game)
             print("human wins!")
             break
         if game.winner == Connect4.other_player(human_player):
-            os.system('cls' if os.name == 'nt' else 'clear')
             print(game)
             print("AI wins!")
             break
         if not Connect4.available_actions(game.board):
-            os.system('cls' if os.name == 'nt' else 'clear')
             print(game)
             print("It was a draw!")
             break
