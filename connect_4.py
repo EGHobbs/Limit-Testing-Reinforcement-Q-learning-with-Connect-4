@@ -308,6 +308,9 @@ def play(agent, width, height, connect, human_start=True):
     # set up gameplay loop
     while True:
 
+        # clear screen/terminal before printing
+        os.system('cls' if os.name == 'nt' else 'clear')
+        
         # print out the board
         print(game)
 
@@ -344,14 +347,17 @@ def play(agent, width, height, connect, human_start=True):
         game.make_move(action)
         game.check_winner()
         if game.winner == human_player:
+            os.system('cls' if os.name == 'nt' else 'clear')
             print(game)
             print("human wins!")
             break
         if game.winner == Connect4.other_player(human_player):
+            os.system('cls' if os.name == 'nt' else 'clear')
             print(game)
             print("AI wins!")
             break
         if not Connect4.available_actions(game.board):
+            os.system('cls' if os.name == 'nt' else 'clear')
             print(game)
             print("It was a draw!")
             break
